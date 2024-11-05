@@ -1,0 +1,78 @@
+name: Update README with Branches
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          
+      - name: Update README with branches
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          node -e '
+          const fs = require("fs");
+          const { execSync } = require("child_process");
+          
+          // Get repository info
+          const repoFullName = process.env.GITHUB_REPOSITORY;
+          const baseUrl = `https://github.com/${repoFullName}/tree`;
+          
+          // Get all branches and process them
+          const branchesOutput = execSync("git branch -r").toString();
+          const branches = branchesOutput
+            .split("\n")
+            .map(branch => branch.trim().replace("origin/", ""))
+            .filter(branch => 
+              branch && 
+              !branch.includes("HEAD") && 
+              !["main", "master"].includes(branch)
+            )
+            .sort();
+          
+          // Read current README
+          let content = "";
+          try {
+            content = fs.readFileSync("README.md", "utf8");
+          } catch (error) {
+            console.log("README.md not found, creating new one");
+          }
+          
+          // Prepare new branch list with links
+          const branchList = `## Active Branches\n\n${
+            branches.length 
+              ? branches.map(branch => `- [${branch}](${baseUrl}/${encodeURIComponent(branch)})`).join("\n")
+              : "No active branches other than main"
+          }\n`;
+          
+          // Update or add branch list section
+          const pattern = /## Active Branches\n\n[\s\S]*?(?=##|$)/;
+          const newContent = content.match(pattern)
+            ? content.replace(pattern, branchList + "\n")
+            : content + "\n" + branchList + "\n";
+          
+          // Write updated content
+          fs.writeFileSync("README.md", newContent);
+          '
+          
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update README with current branches" && git push)
