@@ -1,0 +1,9 @@
+{
+  "name": "@repro-typescript-local-tsconfig-package/tsconfig",
+  "version": "0.0.0-use.local",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    "./base.json": "./base.json"
+  }
+}
