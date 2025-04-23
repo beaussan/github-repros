@@ -5,6 +5,14 @@
     "production": ["default"],
     "sharedGlobals": []
   },
+  "conformance": {
+    "rules": [
+      {
+        "rule": "@nx/conformance/enforce-project-boundaries",
+
+      }
+    ]
+  },
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -17,6 +25,24 @@
           "configName": "tsconfig.lib.json",
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
+        }
+      },
+      "exclude": [
+        "packages/lazy-loaded-library/*",
+        "packages/main-library/*",
+        "packages/dual-entry-lazy-library/*"
+      ]
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "include": [
+        "packages/lazy-loaded-library/*",
+        "packages/main-library/*",
+        "packages/dual-entry-lazy-library/*"
+      ],
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
         }
       }
     }

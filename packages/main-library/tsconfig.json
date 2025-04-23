@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../lazy-loaded-library"
+    },
+    {
+      "path": "../dual-entry-lazy-library"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
+}
