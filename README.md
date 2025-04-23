@@ -7,9 +7,13 @@ Two reproduction in one:
 
 On regular nx modules boundaries, if a lazy loaded library is detected, it's only complaining about static references in the project code. The conformance rule is complaining about the package.json content.
 
+Not an issue with regular eslint rule
+
 ### Lazy loaded library, with dual entry points, only one is lazy loaded
 
 If you have a dual entry point library, and only one of the entry points is lazy loaded, then all imports are marked as issues
+
+Already an issue with regular eslint rule: https://github.com/nrwl/nx/issues/18552
 
 ### Conformance result:
 
