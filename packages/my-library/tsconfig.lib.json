@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "${configDir}",
+    "rootDir": "${configDir}/src",
+    "outDir": "${configDir}/dist",
+    "tsBuildInfoFile": "${configDir}/dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": false,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "${configDir}/src/**/*.ts"
+  ],
+  "references": [],
+  "exclude": [
+    "${configDir}/vite.config.ts",
+    "${configDir}/vite.config.mts",
+    "${configDir}/vitest.config.ts",
+    "${configDir}/vitest.config.mts",
+    "${configDir}/src/**/*.test.ts",
+    "${configDir}/src/**/*.spec.ts",
+    "${configDir}/src/**/*.test.tsx",
+    "${configDir}/src/**/*.spec.tsx",
+    "${configDir}/src/**/*.test.js",
+    "${configDir}/src/**/*.spec.js",
+    "${configDir}/src/**/*.test.jsx",
+    "${configDir}/src/**/*.spec.jsx"
+  ]
+}

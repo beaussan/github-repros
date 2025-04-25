@@ -1,0 +1,34 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "${configDir}/out-tsc/vitest",
+    "types": [
+      "vitest/globals",
+      "vitest/importMeta",
+      "vite/client",
+      "node",
+      "vitest"
+    ],
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "${configDir}/vite.config.ts",
+    "${configDir}/vite.config.mts",
+    "${configDir}/vitest.config.ts",
+    "${configDir}/vitest.config.mts",
+    "${configDir}/src/**/*.test.ts",
+    "${configDir}/src/**/*.spec.ts",
+    "${configDir}/src/**/*.test.tsx",
+    "${configDir}/src/**/*.spec.tsx",
+    "${configDir}/src/**/*.test.js",
+    "${configDir}/src/**/*.spec.js",
+    "${configDir}/src/**/*.test.jsx",
+    "${configDir}/src/**/*.spec.jsx",
+    "${configDir}/src/**/*.d.ts"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
+}

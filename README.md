@@ -1,109 +1,180 @@
 # ConfigDirTs
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Repro steps:
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
-
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-
-## Generate a library
 
 ```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+nx g @nx/js:library --directory=my-library --unitTestRunner=vitest --no-interactive
 ```
 
-## Run tasks
+Use `${configDir}` in the tsconfig files
 
-To build the library use:
-
-```sh
-npx nx build pkg1
-```
-
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
+Then view the target
 
 ```
-npx nx release
+nx show project my-library --json 
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
 
-[Learn more about Nx release &raquo;](hhttps://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Here is the current result (trimmed to only show inputs and outputs):
 
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+```json
+{
+  "targets": {
+    "typecheck": {
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/tsconfig.lib.json",
+        "{projectRoot}/tsconfig.spec.json",
+        "{projectRoot}/${configDir}/src/**/*.ts",
+        "{projectRoot}/${configDir}/vite.config.ts",
+        "{projectRoot}/${configDir}/vite.config.mts",
+        "{projectRoot}/${configDir}/vitest.config.ts",
+        "{projectRoot}/${configDir}/vitest.config.mts",
+        "{projectRoot}/${configDir}/src/**/*.test.ts",
+        "{projectRoot}/${configDir}/src/**/*.spec.ts",
+        "{projectRoot}/${configDir}/src/**/*.test.tsx",
+        "{projectRoot}/${configDir}/src/**/*.spec.tsx",
+        "{projectRoot}/${configDir}/src/**/*.test.js",
+        "{projectRoot}/${configDir}/src/**/*.spec.js",
+        "{projectRoot}/${configDir}/src/**/*.test.jsx",
+        "{projectRoot}/${configDir}/src/**/*.spec.jsx",
+        "{projectRoot}/${configDir}/src/**/*.d.ts",
+        "^production",
+        {
+          "externalDependencies": [
+            "typescript"
+          ]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/**/*.js",
+        "{projectRoot}/**/*.cjs",
+        "{projectRoot}/**/*.mjs",
+        "{projectRoot}/**/*.jsx",
+        "{projectRoot}/**/*.js.map",
+        "{projectRoot}/**/*.jsx.map",
+        "{projectRoot}/**/*.d.ts",
+        "{projectRoot}/**/*.d.cts",
+        "{projectRoot}/**/*.d.mts",
+        "{projectRoot}/**/*.d.ts.map",
+        "{projectRoot}/**/*.d.cts.map",
+        "{projectRoot}/**/*.d.mts.map",
+        "{projectRoot}/tsconfig.tsbuildinfo",
+        "{projectRoot}/dist/**/*.d.ts",
+        "{projectRoot}/dist/tsconfig.lib.tsbuildinfo",
+        "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+        "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
+      ]
+    },
+    "build": {
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.lib.json",
+        "{projectRoot}/${configDir}/src/**/*.ts",
+        "!{projectRoot}/${configDir}/vite.config.ts",
+        "!{projectRoot}/${configDir}/vite.config.mts",
+        "!{projectRoot}/${configDir}/vitest.config.ts",
+        "!{projectRoot}/${configDir}/vitest.config.mts",
+        "!{projectRoot}/${configDir}/src/**/*.test.ts",
+        "!{projectRoot}/${configDir}/src/**/*.spec.ts",
+        "!{projectRoot}/${configDir}/src/**/*.test.tsx",
+        "!{projectRoot}/${configDir}/src/**/*.spec.tsx",
+        "!{projectRoot}/${configDir}/src/**/*.test.js",
+        "!{projectRoot}/${configDir}/src/**/*.spec.js",
+        "!{projectRoot}/${configDir}/src/**/*.test.jsx",
+        "!{projectRoot}/${configDir}/src/**/*.spec.jsx",
+        "^production",
+        {
+          "externalDependencies": [
+            "typescript"
+          ]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    }
+  }
+}
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+As you can see, the inputs and outputs are not valid.
 
-```sh
-npx nx sync:check
+Expected result:
+
+```json
+{
+  "targets": {
+    "typecheck": {
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/tsconfig.lib.json",
+        "{projectRoot}/tsconfig.spec.json",
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/vite.config.ts",
+        "{projectRoot}/vite.config.mts",
+        "{projectRoot}/vitest.config.ts",
+        "{projectRoot}/vitest.config.mts",
+        "{projectRoot}/src/**/*.test.ts",
+        "{projectRoot}/src/**/*.spec.ts",
+        "{projectRoot}/src/**/*.test.tsx",
+        "{projectRoot}/src/**/*.spec.tsx",
+        "{projectRoot}/src/**/*.test.js",
+        "{projectRoot}/src/**/*.spec.js",
+        "{projectRoot}/src/**/*.test.jsx",
+        "{projectRoot}/src/**/*.spec.jsx",
+        "{projectRoot}/src/**/*.d.ts",
+        "^production",
+        {
+          "externalDependencies": [
+            "typescript"
+          ]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/dist/**/*.d.ts",
+        "{projectRoot}/dist/**/*.d.ts.map",
+        "{projectRoot}/dist/tsconfig.lib.tsbuildinfo",
+        "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+        "{projectRoot}/out-tsc/vitest/**/*.d.ts.map",
+        "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
+      ]
+    },
+    "build": {
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.lib.json",
+        "{projectRoot}/src/**/*.ts",
+        "!{projectRoot}/vite.config.ts",
+        "!{projectRoot}/vite.config.mts",
+        "!{projectRoot}/vitest.config.ts",
+        "!{projectRoot}/vitest.config.mts",
+        "!{projectRoot}/src/**/*.test.ts",
+        "!{projectRoot}/src/**/*.spec.ts",
+        "!{projectRoot}/src/**/*.test.tsx",
+        "!{projectRoot}/src/**/*.spec.tsx",
+        "!{projectRoot}/src/**/*.test.js",
+        "!{projectRoot}/src/**/*.spec.js",
+        "!{projectRoot}/src/**/*.test.jsx",
+        "!{projectRoot}/src/**/*.spec.jsx",
+        "^production",
+        {
+          "externalDependencies": [
+            "typescript"
+          ]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    }
+  }
+}
 ```
-
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
