@@ -11,6 +11,8 @@
   "license": "MIT",
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
+    "@code-pushup/cli": "^0.74.0",
+    "@code-pushup/typescript-plugin": "^0.74.0",
     "typescript": "^5.0.0"
   }
 }
