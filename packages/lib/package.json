@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "code-pushup": "code-pushup"
+    "code-pushup": "code-pushup --no-progress --verbose"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",
