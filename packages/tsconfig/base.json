@@ -1,0 +1,56 @@
+
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "lib": ["es2021"],
+    "rootDir": "${configDir}",
+    "sourceMap": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "allowJs": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2020",
+    "outDir": "${configDir}/dist"
+  },
+  "exclude": [
+    "${configDir}/src/**/*.spec.ts",
+    "${configDir}/src/**/*.test.ts",
+    "${configDir}/src/**/*.spec.tsx",
+    "${configDir}/src/**/*.test.tsx",
+    "${configDir}/src/**/*.spec.js",
+    "${configDir}/src/**/*.test.js",
+    "${configDir}/src/**/*.spec.jsx",
+    "${configDir}/src/**/*.test.jsx",
+    "${configDir}/src/**/*.stories.ts",
+    "${configDir}/src/**/*.stories.js",
+    "${configDir}/src/**/*.stories.jsx",
+    "${configDir}/src/**/*.stories.tsx",
+    "${configDir}/**/__tests__/**/*.ts",
+    "${configDir}/**/__tests__/**/*.tsx"
+  ],
+  "include": [
+    "${configDir}/src/@types/*.d.ts",
+    "${configDir}/src/**/*.js",
+    "${configDir}/src/**/*.jsx",
+    "${configDir}/src/**/*.ts",
+    "${configDir}/src/**/*.tsx"
+  ]
+}
