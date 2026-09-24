@@ -1,0 +1,13 @@
+{
+  "name": "uppy-destroy-timeout-repro",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "repro": "node repro.mjs",
+    "control": "node repro.mjs --keep-dom"
+  },
+  "dependencies": {
+    "@uppy/core": "6.0.1",
+    "jsdom": "26.1.0"
+  }
+}
