@@ -4,13 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@uppy/core@6.0.1': d1e8bff33a8b6eef2f757da8dfbafbb7071397834afba7db2e2f56f396f5c106
+
 importers:
 
   .:
     dependencies:
       '@uppy/core':
         specifier: 6.0.1
-        version: 6.0.1
+        version: 6.0.1(patch_hash=d1e8bff33a8b6eef2f757da8dfbafbb7071397834afba7db2e2f56f396f5c106)
       jsdom:
         specifier: 26.1.0
         version: 26.1.0
@@ -283,7 +286,7 @@ snapshots:
 
   '@types/retry@0.12.2': {}
 
-  '@uppy/core@6.0.1':
+  '@uppy/core@6.0.1(patch_hash=d1e8bff33a8b6eef2f757da8dfbafbb7071397834afba7db2e2f56f396f5c106)':
     dependencies:
       '@transloadit/prettier-bytes': 2.0.0
       classnames: 2.5.1

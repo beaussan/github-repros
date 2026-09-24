@@ -1,53 +1,60 @@
-# Uppy online-status timer survives destroy()
+# Uppy destroy-timeout: proposed fix
 
-Minimal reproduction using **@uppy/core 6.0.1** and **jsdom 26.1.0**.
-No React, Vitest, application code, fake timers, or Uppy patches are involved.
-Verified with Node.js 26.5.0 and pnpm 12.3.4.
+Companion to [the unpatched repro](https://github.com/beaussan/github-repros/tree/codex/uppy-destroy-timeout). Uses the same Uppy 6.0.1 and jsdom 26.1.0,
+with a reproducible pnpm dependency patch. The original repro is unchanged.
 
 ## Run
 
 ```sh
 pnpm install --frozen-lockfile
+pnpm test
 pnpm repro
-```
-
-The script creates an Uppy instance and immediately calls `destroy()`, then closes
-jsdom and removes the `window` global, simulating test-environment teardown.
-Approximately three seconds later, the process exits with code 1:
-
-```text
-ReferenceError: window is not defined
-    at Uppy.updateOnlineStatus (.../@uppy/core/lib/Uppy.js:1135:24)
-```
-
-## Compare with the DOM retained
-
-```sh
 pnpm control
 ```
 
-This runs the same script but retains the DOM. After approximately three seconds:
+All three commands should exit successfully. The two original real-timer scenarios
+no longer keep the process alive for Uppy’s three-second check, throw after DOM
+teardown, or emit an online event after destruction.
 
-```text
-BUG: is-online emitted after destroy()
+## Patch
+
+`patches/@uppy__core@6.0.1.patch` stores the startup timeout handle in a private
+field and clears it at the start of `destroy()`. It updates TypeScript source and
+the compiled ESM entry used by this repro. Prebuilt browser bundles are not rebuilt.
+An upstream PR would modify source and let Uppy’s build generate distribution files.
+
+## Regression coverage
+
+`lifecycle.test.mjs` uses Node’s test runner and controlled timers to verify:
+
+1. Destroying Uppy before removing window prevents a late ReferenceError.
+2. Destroyed instances emit no delayed online-status event.
+3. A live instance still runs its startup check and handles online events;
+   destruction removes those listeners.
+
+Verified on Node.js 26.5.0 / pnpm 12.3.4:
+
+| Dependency | Teardown test | No late event | Live behavior |
+| --- | --- | --- | --- |
+| Original 6.0.1 | FAIL | FAIL | PASS |
+| Patched 6.0.1 | PASS | PASS | PASS |
+
+To repeat the comparison from a fresh clone of this branch, install the original
+repro in a sibling worktree first (skip this if it already exists):
+
+```sh
+git fetch origin codex/uppy-destroy-timeout
+git worktree add --detach ../uppy-destroy-timeout origin/codex/uppy-destroy-timeout
+pnpm --dir ../uppy-destroy-timeout install --frozen-lockfile
 ```
 
-The script deliberately sets exit code 1 when that event is observed. This isolates
-the lifecycle problem from the missing-global exception; it does not establish a
-user-visible production failure.
+Run the same tests against the original dependency:
 
-## Expected
+```sh
+UPPY_MODULE="$(node --input-type=module -e 'console.log(new URL("../uppy-destroy-timeout/node_modules/@uppy/core/lib/index.js", import.meta.url).href)')" pnpm test
+```
 
-`destroy()` cancels the pending initial online-status check. Both commands should
-exit successfully without waiting for that check, throwing, or emitting an
-online-status event after destruction.
+Expected: two failures, one pass. This changes neither installation.
 
-## Suspected cause
-
-Core schedules `setTimeout(this.#updateOnlineStatus, 3000)` without retaining its
-handle. `destroy()` removes the online/offline listeners but does not cancel that
-timeout. A potential fix is to retain and clear the handle during destruction.
-
-- [Timer and callback in 6.0.1](https://github.com/transloadit/uppy/blob/%40uppy/core%406.0.1/packages/%40uppy/core/src/Uppy.ts#L1884-L1908)
-- [destroy() in 6.0.1](https://github.com/transloadit/uppy/blob/%40uppy/core%406.0.1/packages/%40uppy/core/src/Uppy.ts#L2043-L2060)
-- [Related historical listener-cleanup issue #3026](https://github.com/transloadit/uppy/issues/3026)
+The real-timer repro commands were also run successfully against the patch.
+These are focused lifecycle checks, not the full upstream Uppy test suite.

@@ -1,10 +1,11 @@
 {
-  "name": "uppy-destroy-timeout-repro",
+  "name": "uppy-destroy-timeout-patched-repro",
   "private": true,
   "type": "module",
   "scripts": {
     "repro": "node repro.mjs",
-    "control": "node repro.mjs --keep-dom"
+    "control": "node repro.mjs --keep-dom",
+    "test": "node --test lifecycle.test.mjs"
   },
   "dependencies": {
     "@uppy/core": "6.0.1",
