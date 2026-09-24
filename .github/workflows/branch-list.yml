@@ -53,10 +53,13 @@ jobs:
             console.log("README.md not found, creating new one");
           }
           
+          // Encode each path segment while preserving slashes in branch names.
+          const branchPath = branch => branch.split("/").map(encodeURIComponent).join("/");
+
           // Prepare new branch list with links
           const branchList = `## Active Branches\n\n${
             branches.length 
-              ? branches.map(branch => `- [${branch}](${baseUrl}/${encodeURIComponent(branch)})`).join("\n")
+              ? branches.map(branch => `- [${branch}](${baseUrl}/${branchPath(branch)})`).join("\n")
               : "No active branches other than main"
           }\n`;
           
