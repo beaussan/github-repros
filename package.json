@@ -1,0 +1,12 @@
+{
+  "name": "nx-cloud-agent-global-input-globs",
+  "private": true,
+  "scripts": {
+    "repro": "node repro.cjs"
+  },
+  "devDependencies": {
+    "nx": "23.3.0",
+    "typescript": "6.0.2"
+  },
+  "packageManager": "pnpm@12.3.4"
+}

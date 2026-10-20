@@ -1,0 +1,10 @@
+{
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [
+      "{workspaceRoot}/tools/plugins/*.ts",
+      "{workspaceRoot}/.nx/workflows/*",
+      "{workspaceRoot}/.nx/ci-config.yaml"
+    ]
+  }
+}
