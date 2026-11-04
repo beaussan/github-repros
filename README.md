@@ -4,8 +4,10 @@ This github repo is used to host issue reproductions or similar experiments on v
 
 ## Active Branches
 
+- [codex/typescript-project-reference-cycle](https://github.com/beaussan/github-repros/tree/codex/typescript-project-reference-cycle)
 - [codex/uppy-destroy-timeout](https://github.com/beaussan/github-repros/tree/codex/uppy-destroy-timeout)
 - [codex/uppy-destroy-timeout-fixed](https://github.com/beaussan/github-repros/tree/codex/uppy-destroy-timeout-fixed)
+- [nx-cloud-agent-global-input-globs](https://github.com/beaussan/github-repros/tree/nx-cloud-agent-global-input-globs)
 - [nx-repro-modules-boundaries-with-conformance-and-lazy](https://github.com/beaussan/github-repros/tree/nx-repro-modules-boundaries-with-conformance-and-lazy)
 - [repro-code-pushup-typescript-resolutions](https://github.com/beaussan/github-repros/tree/repro-code-pushup-typescript-resolutions)
 - [repro-devtools-cloudflare-plugin](https://github.com/beaussan/github-repros/tree/repro-devtools-cloudflare-plugin)
