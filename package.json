@@ -1,0 +1,14 @@
+{
+  "name": "typescript-project-reference-cycle-example",
+  "private": true,
+  "packageManager": "pnpm@11.21.0",
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck:a": "tsc -p packages/a --noEmit",
+    "typecheck:b": "tsc -p packages/b --noEmit",
+    "clean": "tsc -b --clean"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}
